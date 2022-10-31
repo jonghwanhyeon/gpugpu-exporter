@@ -10,6 +10,7 @@ $ docker run \
     --restart=always \
     --gpus=all \
     --pid=host \
+    --env DOCKER_HOST=unix://tmp/docker.sock \
     --volume /var/run/docker.sock:/tmp/docker.sock:ro \
     --publish=9700:9700 \
     --name=prometheus-gpugpu-exporter \
