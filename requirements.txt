@@ -1,6 +1,4 @@
-docker
+gpugpu
 loguru
-nvidia-ml-py3
 prometheus-client
-psutil
 tenacity

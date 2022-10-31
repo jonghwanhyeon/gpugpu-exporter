@@ -6,8 +6,8 @@ from loguru import logger
 from prometheus_client import Gauge, start_http_server
 from tenacity import retry, stop_after_attempt, wait_exponential
 
-from gpugpu_exporter.gpus import GPU, all_gpus
-from gpugpu_exporter.utils import find_container_by_pid
+from gpugpu.gpus import all_gpus
+from gpugpu.utils import get_friendly_name_of_process
 
 logger.remove()
 logger.add(
@@ -18,13 +18,6 @@ logger.add(
         " <level>[{level}]</level> {message}"
     ),
 )
-
-def get_friendly_name_of_process(process: GPU.Process) -> str:
-    container = find_container_by_pid(process.pid)
-    if container:
-        return container.name
-    else:
-        return process.user
 
 
 class GPUGPUExporter:
@@ -39,7 +32,9 @@ class GPUGPUExporter:
         start_http_server(self.port)
         self.run_metrics_loop()
 
-    @retry(wait=wait_exponential(multiplier=1, min=2, max=60), stop=stop_after_attempt(10))
+    @retry(
+        wait=wait_exponential(multiplier=1, min=2, max=60), stop=stop_after_attempt(10)
+    )
     def run_metrics_loop(self):
         while True:
             metrics = list(self.gather_metrics())
