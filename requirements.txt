@@ -1,0 +1,6 @@
+docker
+loguru
+nvidia-ml-py3
+prometheus-client
+psutil
+tenacity
